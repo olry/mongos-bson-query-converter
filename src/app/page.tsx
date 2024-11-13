@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { Bug } from 'lucide-react';
+import Markdown from 'react-markdown';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -54,7 +55,7 @@ export default function Home() {
   }, [transformer, value]);
   return (
     <div className="flex flex-col items-center justify-items-center min-h-screen gap-16 py-8 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col w-2/4 min-w-[400px] gap-8 items-center sm:items-start mt-[16vh] relative">
+      <main className="flex flex-col w-2/4 min-w-[400px] lg:min-w-[900px] gap-8 items-center sm:items-start mt-[16vh] relative">
         <div
           className={clsx(
             'flex flex-col w-full transition-opacity',
@@ -120,13 +121,21 @@ export default function Home() {
         </div>
         <div
           className={clsx(
-            'w-full flex justify-center absolute pointer-events-none transition-all font-[family-name:var(--font-geist-mono)]',
+            'w-full flex justify-center absolute transition-all font-[family-name:var(--font-geist-mono)]',
             whyState.isActive
               ? 'opacity-100 -translate-y-0'
               : 'opacity-0 pointer-events-none translate-y-6 text-neutral-300'
           )}
         >
-          <div className="max-w-[720px] w-full"> Because </div>
+          <div className="max-w-[720px] w-full">
+            <Markdown>{`
+Because.
+we also
+
+
+[asd](https://www.reddit.com/r/golang/comments/1bfe8vc/what_are_your_honest_thoughts_on_libraries_like/)
+            `}</Markdown>
+          </div>
         </div>
         <div className="text-center w-full mt-6 md:text-3xl text-2xl">
           {TITLE}
