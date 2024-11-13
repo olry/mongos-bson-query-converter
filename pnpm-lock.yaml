@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      acorn:
+        specifier: ^8.14.0
+        version: 8.14.0
+      acorn-walk:
+        specifier: ^8.3.4
+        version: 8.3.4
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -471,6 +477,10 @@ packages:
 
   acorn-walk@7.2.0:
     resolution: {integrity: sha512-OPdCF6GsMIP+Az+aWfAAOEt2/+iVDKE7oy6lJ098aoe59oAmK76qV6Gw60SbZ8jHuG2wH058GF4pLFbYamYrVA==}
+    engines: {node: '>=0.4.0'}
+
+  acorn-walk@8.3.4:
+    resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
     engines: {node: '>=0.4.0'}
 
   acorn@7.4.1:
@@ -2527,6 +2537,10 @@ snapshots:
       xtend: 4.0.2
 
   acorn-walk@7.2.0: {}
+
+  acorn-walk@8.3.4:
+    dependencies:
+      acorn: 8.14.0
 
   acorn@7.4.1: {}
 

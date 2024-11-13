@@ -1,17 +1,22 @@
 'use client';
 import Editor from '@/components/Editor';
 import Preview from '@/components/Preview';
-import { transformToBsonD } from '@/package/bson-mongos-converter';
+import { transformToMongoGo } from '@/package/bson-mongos-converter';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 export default function Home() {
   const [value, setValue] = useState<string | undefined>('{}');
-
+  const [error, setError] = useState('');
+  const lastValidValueRef = useRef<string>();
   const transformedValue = useMemo(() => {
     try {
-      return transformToBsonD(JSON.parse(value ?? '{}'));
-    } catch {
+      const transformed = transformToMongoGo(value ?? '{}');
+      setError('');
+      lastValidValueRef.current = transformed;
+      return transformed;
+    } catch (err: any) {
+      setError(err?.message);
       return value;
     }
   }, [value]);
@@ -28,9 +33,13 @@ export default function Home() {
             />
           </div>
           <div className="flex-1">
-            <Preview value={transformedValue} />
+            <Preview
+              value={error ? lastValidValueRef.current : transformedValue}
+              className={error ? 'opacity-40' : ''}
+            />
           </div>
         </div>
+        <div>{error}</div>
         <div className="text-center w-full font-[family-name:var(--font-geist-mono)] mt-6">
           Convert Mongo Shell {'<>'} BSON Query for Golang
         </div>

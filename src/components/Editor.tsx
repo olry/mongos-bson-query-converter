@@ -21,11 +21,20 @@ export default function Editor({
       done = true;
       shikiToMonaco(highlighter, monaco);
       monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+
       console.log('here is the monaco instance:', monaco);
     }
   }, [monaco]);
   return (
     <MonacoEditor
+      options={{
+        minimap: {
+          enabled: false,
+        },
+        padding: {
+          top: 8,
+        },
+      }}
       height="100%"
       defaultLanguage="javascript"
       value={value}

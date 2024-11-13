@@ -1,5 +1,5 @@
 {
-  "name": "mongos-bson-converter",
+  "name": "mongos-bson-go-query-converter",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "acorn": "^8.14.0",
+    "acorn-walk": "^8.3.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "hast-util-to-jsx-runtime": "^2.3.2",

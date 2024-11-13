@@ -1,1 +1,1 @@
-# mongos-bson-converter
+# mongos-bson-go-query-converter

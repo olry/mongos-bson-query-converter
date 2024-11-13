@@ -3,8 +3,15 @@
 import { highlight } from '@/utils/highlight.utils';
 import { useLayoutEffect, useState } from 'react';
 import { Card } from './ui/card';
+import { cn } from '@/lib/utils';
 
-export default function Preview({ value }: { value?: string }) {
+export default function Preview({
+  value,
+  className,
+}: {
+  value?: string;
+  className?: string;
+}) {
   const [nodes, setNodes] = useState(null);
 
   useLayoutEffect(() => {
@@ -12,7 +19,12 @@ export default function Preview({ value }: { value?: string }) {
   }, [value]);
 
   return (
-    <Card className="px-4 py-2 rounded-md overflow-y-scroll [&>pre]:h-full [&>pre]:bg-transparent [&>pre]:text-xs h-full">
+    <Card
+      className={cn(
+        'px-4 py-2 rounded-md overflow-y-scroll [&>pre]:h-full [&>pre]:bg-transparent [&>pre]:text-xs h-full',
+        className
+      )}
+    >
       {nodes ?? <p>Loading...</p>}
     </Card>
   );
