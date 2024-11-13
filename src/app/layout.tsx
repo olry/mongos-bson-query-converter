@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import localFont from 'next/font/local';
 import './globals.css';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased heropattern-circuitboard-neutral-400/10 dark:heropattern-circuitboard-neutral-800/10 transition-colors`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased heropattern-circuitboard-neutral-400/10 dark:heropattern-circuitboard-neutral-700/10 transition-colors`}
       >
         <ThemeProvider
           attribute="class"
@@ -39,6 +40,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <GoogleAnalytics gaId="G-08T4H0TVCX" />
       </body>
     </html>
   );

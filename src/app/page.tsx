@@ -3,7 +3,7 @@ import Editor from '@/components/Editor';
 import Preview from '@/components/Preview';
 import { Tabs } from '@/components/ui/tabs';
 import { TITLE } from '@/constants';
-import { cn } from '@/lib/utils';
+import { cn, useToggle } from '@/lib/utils';
 import {
   transformGoToMongoShell,
   transformToBsonGo,
@@ -16,6 +16,8 @@ import ThemeSwitchButton from '@/components/ThemeSwitchButton';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import clsx from 'clsx';
+import { Bug } from 'lucide-react';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -36,6 +38,9 @@ export default function Home() {
     () => transformers[dstTransformType],
     [dstTransformType]
   );
+
+  const whyState = useToggle();
+
   const transformedValue = useMemo(() => {
     try {
       const transformed = transformer(value ?? '{}');
@@ -49,58 +54,81 @@ export default function Home() {
   }, [transformer, value]);
   return (
     <div className="flex flex-col items-center justify-items-center min-h-screen gap-16 py-8 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col w-2/4 min-w-[800px] gap-8 items-center sm:items-start mt-[16vh]">
-        <div className="flex w-full min-h-[360px] h-[42vh] gap-4">
-          <div className="flex-1 flex flex-col">
-            <TransformTypeSelection
-              value={srcTransformType}
-              onChange={(val) => {
-                if (val === dstTransformType) {
-                  setDstTransformType(
-                    transformerKeys.find((k) => k !== val) as any
-                  );
-                }
-                setValue(transformedValue);
-                return setSrcTransformType(val);
-              }}
-            />
-            <Editor
-              focusOnLoad
-              defaultLanguage={
-                srcTransformType === 'bson' ? 'go' : 'javascript'
-              }
-              language={srcTransformType === 'bson' ? 'go' : 'javascript'}
-              onChange={(val) => {
-                setValue(val);
-              }}
-              value={value}
-            />
-          </div>
-          <div className="flex-1 flex flex-col">
-            <div className="flex justify-end w-full">
+      <main className="flex flex-col w-2/4 min-w-[400px] gap-8 items-center sm:items-start mt-[16vh] relative">
+        <div
+          className={clsx(
+            'flex flex-col w-full transition-opacity',
+            whyState.isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          )}
+        >
+          <div className="flex w-full min-h-[360px] h-[42vh] gap-4">
+            <div className="flex-1 flex flex-col">
               <TransformTypeSelection
-                value={dstTransformType}
+                value={srcTransformType}
                 onChange={(val) => {
-                  if (val === srcTransformType) {
-                    setSrcTransformType(
+                  if (val === dstTransformType) {
+                    setDstTransformType(
                       transformerKeys.find((k) => k !== val) as any
                     );
                   }
                   setValue(transformedValue);
-                  return setDstTransformType(val);
+                  return setSrcTransformType(val);
                 }}
               />
+              <Editor
+                focusOnLoad
+                defaultLanguage={
+                  srcTransformType === 'bson' ? 'go' : 'javascript'
+                }
+                language={srcTransformType === 'bson' ? 'go' : 'javascript'}
+                onChange={(val) => {
+                  setValue(val);
+                }}
+                value={value}
+              />
             </div>
-            <Preview
-              value={error ? lastValidValueRef.current : transformedValue}
-              className={error ? '[&>div]:opacity-40' : ''}
-            />
+            <div className="flex-1 flex flex-col">
+              <div className="flex justify-end w-full">
+                <TransformTypeSelection
+                  value={dstTransformType}
+                  onChange={(val) => {
+                    if (val === srcTransformType) {
+                      setSrcTransformType(
+                        transformerKeys.find((k) => k !== val) as any
+                      );
+                    }
+                    setValue(transformedValue);
+                    return setDstTransformType(val);
+                  }}
+                />
+              </div>
+              <Preview
+                value={error ? lastValidValueRef.current : transformedValue}
+                className={error ? '[&>div]:opacity-40' : ''}
+              />
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              'text-red-500 text-sm flex justify-end',
+              error ? '' : 'opacity-0'
+            )}
+          >
+            {error || '-'}
           </div>
         </div>
-        <div className={cn('text-red-500 text-sm', error ? '' : 'opacity-0')}>
-          {error || '-'}
+        <div
+          className={clsx(
+            'w-full flex justify-center absolute pointer-events-none transition-all font-[family-name:var(--font-geist-mono)]',
+            whyState.isActive
+              ? 'opacity-100 -translate-y-0'
+              : 'opacity-0 pointer-events-none translate-y-6 text-neutral-300'
+          )}
+        >
+          <div className="max-w-[720px] w-full"> Because </div>
         </div>
-        <div className="text-center w-full font-[family-name:var(--font-geist-mono)] mt-6 text-2xl">
+        <div className="text-center w-full mt-6 md:text-3xl text-2xl">
           {TITLE}
         </div>
         {/* <Image
@@ -148,12 +176,11 @@ export default function Home() {
           </a>
         </div> */}
       </main>
-      <div className="flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 font-[family-name:var(--font-geist-mono)] text-neutral-400 hover:text-neutral-200 transition-colors"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div className="flex flex-wrap items-center justify-center gap-12">
+        <div
+          role="button"
+          className="flex items-center gap-2 font-[family-name:var(--font-geist-mono)] dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors text-neutral-800 hover:underline dark:hover:no-underline"
+          onClick={() => whyState.toggle()}
         >
           {/* <Image
             aria-hidden
@@ -163,37 +190,23 @@ export default function Home() {
             height={16}
           /> */}
           Why?
-        </a>
-        {/* <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
+        </div>
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          className="flex items-center gap-2 font-[family-name:var(--font-geist-mono)] dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors text-neutral-800 hover:underline dark:hover:no-underline"
           target="_blank"
+          href="https://github.com/olry/mongos-bson-query-converter/issues/new"
           rel="noopener noreferrer"
         >
-          <Image
+          <Bug size={16} />
+          {/* <Image
             aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
+            src="/file.svg"
+            alt="File icon"
             width={16}
             height={16}
-          />
-          Go to nextjs.org →
-        </a> */}
+          /> */}
+          Report bug
+        </a>
       </div>
       <div className="flex-1"></div>
       <footer className="flex justify-end w-full md:px-12 px-6 gap-4">
