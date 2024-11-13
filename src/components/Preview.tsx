@@ -1,11 +1,11 @@
 'use client';
 
-import { highlight } from '@/utils/highlight.utils';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Card } from './ui/card';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from './ui/scroll-area';
+import { highlight } from '@/utils/highlight.utils';
 import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { Card } from './ui/card';
+import { ScrollArea } from './ui/scroll-area';
 
 export default function Preview({
   value,
