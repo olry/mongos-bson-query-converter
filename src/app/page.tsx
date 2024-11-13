@@ -13,6 +13,9 @@ import { useMemo, useRef, useState } from 'react';
 import MongoSvg from '@/assets/mongo-bw.svg';
 import BsonSvg from '@/assets/bson.svg';
 import ThemeSwitchButton from '@/components/ThemeSwitchButton';
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -45,10 +48,10 @@ export default function Home() {
     }
   }, [transformer, value]);
   return (
-    <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex w-2/4 min-w-[800px] flex-col gap-8 items-center sm:items-start mt-[12vh]">
-        <div className="flex w-full min-h-[300px] h-[40vh] gap-4">
-          <div className="flex-1">
+    <div className="flex flex-col items-center justify-items-center min-h-screen gap-16 py-8 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col w-2/4 min-w-[800px] gap-8 items-center sm:items-start mt-[16vh]">
+        <div className="flex w-full min-h-[360px] h-[42vh] gap-4">
+          <div className="flex-1 flex flex-col">
             <TransformTypeSelection
               value={srcTransformType}
               onChange={(val) => {
@@ -61,13 +64,18 @@ export default function Home() {
               }}
             />
             <Editor
+              focusOnLoad
+              defaultLanguage={
+                srcTransformType === 'bson' ? 'go' : 'javascript'
+              }
+              language={srcTransformType === 'bson' ? 'go' : 'javascript'}
               onChange={(val) => {
                 setValue(val);
               }}
               value={value}
             />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col">
             <div className="flex justify-end w-full">
               <TransformTypeSelection
                 value={dstTransformType}
@@ -138,7 +146,7 @@ export default function Home() {
           </a>
         </div> */}
       </main>
-      <footer className="flex gap-6 flex-wrap items-center justify-center">
+      <div className="flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 font-[family-name:var(--font-geist-mono)] text-neutral-400 hover:text-neutral-200 transition-colors"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -154,7 +162,6 @@ export default function Home() {
           /> */}
           Why?
         </a>
-        <ThemeSwitchButton />
         {/* <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -185,6 +192,19 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a> */}
+      </div>
+      <div className="flex-1"></div>
+      <footer className="flex justify-end w-full md:px-12 px-6 gap-4">
+        <ThemeSwitchButton />
+        <Button asChild className="p-3 h-11 w-11" variant="ghost">
+          <Link
+            href="https://github.com/olry/mongos-bson-query-converter"
+            target="_blank"
+            rel="noopener"
+          >
+            <GitHubLogoIcon className="size-full" />
+          </Link>
+        </Button>
       </footer>
     </div>
   );

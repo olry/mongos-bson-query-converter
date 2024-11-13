@@ -3,10 +3,10 @@ import { Fragment } from 'react';
 import { jsx, jsxs } from 'react/jsx-runtime';
 import { codeToHast } from 'shiki/bundle/full';
 
-export async function highlight(code: string) {
+export async function highlight(code: string, theme?: string) {
   const outRaw = await codeToHast(code, {
     lang: 'go',
-    theme: 'github-dark',
+    theme: theme === 'dark' ? 'github-dark' : 'github-light',
     transformers: [
       {
         pre(hast) {

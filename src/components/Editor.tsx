@@ -12,28 +12,35 @@ const highlighter = await createHighlighter({
   langs: ['javascript', 'typescript', 'vue'],
 });
 
-let done = false;
 export default function Editor({
-  onChange,
-  value,
-}: Parameters<typeof MonacoEditor>[0]) {
+  focusOnLoad,
+  ...editorProps
+}: Parameters<typeof MonacoEditor>[0] & {
+  focusOnLoad?: boolean;
+}) {
   const monaco = useMonaco();
   const { theme } = useTheme();
   useEffect(() => {
-    highlighter.setTheme(theme === 'light' ? 'vitesse-light' : 'vitesse-dark');
-  }, [theme]);
-  useEffect(() => {
-    if (!done && monaco) {
-      done = true;
-      shikiToMonaco(highlighter, monaco);
-      monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+    monaco?.editor.setTheme(
+      theme === 'light' ? 'vitesse-light' : 'vitesse-dark'
+    );
+  }, [monaco, theme]);
 
-      console.log('here is the monaco instance:', monaco);
-    }
-  }, [monaco]);
   return (
-    <Card className="h-full overflow-hidden">
+    <Card className="flex-1 overflow-hidden">
       <MonacoEditor
+        onMount={(editor, monaco) => {
+          shikiToMonaco(highlighter, monaco);
+          monaco.editor.setTheme(
+            theme === 'light' ? 'vitesse-light' : 'vitesse-dark'
+          );
+          monaco.languages.typescript.javascriptDefaults.setEagerModelSync(
+            true
+          );
+          if (focusOnLoad) {
+            editor.focus();
+          }
+        }}
         options={{
           minimap: {
             enabled: false,
@@ -44,9 +51,8 @@ export default function Editor({
         }}
         height="100%"
         defaultLanguage="javascript"
-        value={value}
         loading=""
-        onChange={onChange}
+        {...editorProps}
       />
     </Card>
   );
