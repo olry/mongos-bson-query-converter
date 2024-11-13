@@ -1,5 +1,5 @@
 {
-  "name": "mongos-bson-go-query-converter",
+  "name": "mongos-bson-query-converter",
   "version": "0.1.0",
   "private": true,
   "scripts": {

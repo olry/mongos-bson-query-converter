@@ -1,4 +1,4 @@
-import { parse } from 'acorn';
+import { ExpressionStatement, parse } from 'acorn';
 import { simple as simpleWalk } from 'acorn-walk';
 
 export function transformToMongoGo(input: string): string {
