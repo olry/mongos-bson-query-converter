@@ -4,6 +4,7 @@ import { highlight } from '@/utils/highlight.utils';
 import { useLayoutEffect, useState } from 'react';
 import { Card } from './ui/card';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from './ui/scroll-area';
 
 export default function Preview({
   value,
@@ -19,13 +20,10 @@ export default function Preview({
   }, [value]);
 
   return (
-    <Card
-      className={cn(
-        'px-4 py-2 rounded-md overflow-y-scroll [&>pre]:h-full [&>pre]:bg-transparent [&>pre]:text-xs h-full',
-        className
-      )}
-    >
-      {nodes ?? <p>Loading...</p>}
+    <Card className={cn('px-4 py-3 [&>pre]:h-full h-full', className)}>
+      <ScrollArea>
+        <div className="[&>pre]:bg-transparent [&>pre]:text-xs">{nodes}</div>
+      </ScrollArea>
     </Card>
   );
 }

@@ -1,17 +1,41 @@
 'use client';
 import Editor from '@/components/Editor';
 import Preview from '@/components/Preview';
-import { transformToMongoGo } from '@/package/bson-mongos-converter';
+import { Tabs } from '@/components/ui/tabs';
+import { TITLE } from '@/constants';
+import { cn } from '@/lib/utils';
+import {
+  transformGoToMongoShell,
+  transformToBsonGo,
+} from '@/package/bson-mongos-converter';
 import Image from 'next/image';
 import { useMemo, useRef, useState } from 'react';
+import MongoSvg from '@/assets/mongo-bw.svg';
+import BsonSvg from '@/assets/bson.svg';
+import ThemeSwitchButton from '@/components/ThemeSwitchButton';
+
+const transformers = {
+  bson: transformToBsonGo,
+  mongos: transformGoToMongoShell,
+};
+
+const transformerKeys = Object.keys(transformers);
 
 export default function Home() {
   const [value, setValue] = useState<string | undefined>('{}');
   const [error, setError] = useState('');
   const lastValidValueRef = useRef<string>();
+  const [srcTransformType, setSrcTransformType] =
+    useState<keyof typeof transformers>('mongos');
+  const [dstTransformType, setDstTransformType] =
+    useState<keyof typeof transformers>('bson');
+  const transformer = useMemo(
+    () => transformers[dstTransformType],
+    [dstTransformType]
+  );
   const transformedValue = useMemo(() => {
     try {
-      const transformed = transformToMongoGo(value ?? '{}');
+      const transformed = transformer(value ?? '{}');
       setError('');
       lastValidValueRef.current = transformed;
       return transformed;
@@ -19,12 +43,23 @@ export default function Home() {
       setError(err?.message);
       return value;
     }
-  }, [value]);
+  }, [transformer, value]);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex w-2/4 min-w-[800px] flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex w-2/4 min-w-[800px] flex-col gap-8 items-center sm:items-start mt-[12vh]">
         <div className="flex w-full min-h-[300px] h-[40vh] gap-4">
           <div className="flex-1">
+            <TransformTypeSelection
+              value={srcTransformType}
+              onChange={(val) => {
+                if (val === dstTransformType) {
+                  setDstTransformType(
+                    transformerKeys.find((k) => k !== val) as any
+                  );
+                }
+                return setSrcTransformType(val);
+              }}
+            />
             <Editor
               onChange={(val) => {
                 setValue(val);
@@ -33,15 +68,30 @@ export default function Home() {
             />
           </div>
           <div className="flex-1">
+            <div className="flex justify-end w-full">
+              <TransformTypeSelection
+                value={dstTransformType}
+                onChange={(val) => {
+                  if (val === srcTransformType) {
+                    setSrcTransformType(
+                      transformerKeys.find((k) => k !== val) as any
+                    );
+                  }
+                  return setDstTransformType(val);
+                }}
+              />
+            </div>
             <Preview
               value={error ? lastValidValueRef.current : transformedValue}
-              className={error ? 'opacity-40' : ''}
+              className={error ? '[&>div]:opacity-40' : ''}
             />
           </div>
         </div>
-        <div>{error}</div>
-        <div className="text-center w-full font-[family-name:var(--font-geist-mono)] mt-6">
-          Convert Mongo Shell {'<>'} BSON Query for Golang
+        <div className={cn('text-red-500 text-sm', error ? '' : 'opacity-0')}>
+          {error || '-'}
+        </div>
+        <div className="text-center w-full font-[family-name:var(--font-geist-mono)] mt-6 text-2xl">
+          {TITLE}
         </div>
         {/* <Image
           className="dark:invert"
@@ -88,23 +138,24 @@ export default function Home() {
           </a>
         </div> */}
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+      <footer className="flex gap-6 flex-wrap items-center justify-center">
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          className="flex items-center gap-2 font-[family-name:var(--font-geist-mono)] text-neutral-400 hover:text-neutral-200 transition-colors"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
+          {/* <Image
             aria-hidden
             src="/file.svg"
             alt="File icon"
             width={16}
             height={16}
-          />
-          Learn
+          /> */}
+          Why?
         </a>
-        <a
+        <ThemeSwitchButton />
+        {/* <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
@@ -133,8 +184,39 @@ export default function Home() {
             height={16}
           />
           Go to nextjs.org →
-        </a>
+        </a> */}
       </footer>
     </div>
+  );
+}
+
+function TransformTypeSelection<T extends string = keyof typeof transformers>({
+  value,
+  onChange,
+}: {
+  value: T;
+  onChange(val: T): void;
+}) {
+  return (
+    <Tabs
+      className="w-fit mb-2"
+      onValueChange={(val) => {
+        onChange(val as any);
+      }}
+      value={value}
+    >
+      <Tabs.List className="grid w-full grid-cols-2">
+        <Tabs.Trigger value="mongos">
+          <Image src={MongoSvg} width={18} height={18} alt="mongo icon" />
+          mongosh
+        </Tabs.Trigger>
+        <Tabs.Trigger value="bson">
+          <span className="text-white">
+            <Image src={BsonSvg} width={18} height={18} alt="BSON icon" />
+          </span>
+          BSON
+        </Tabs.Trigger>
+      </Tabs.List>
+    </Tabs>
   );
 }

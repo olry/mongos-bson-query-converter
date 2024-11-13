@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
+import { TITLE } from '@/constants';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -15,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'BSON / mongo shell query converter for Go',
+  title: TITLE,
   description:
     'Convert mongo shell queries to BSON structs for mongo-go-driver usage in Golang, and vice versa',
 };
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased heropattern-ilikefood-neutral-700/10`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased -heropattern-circuitboard-neutral-800/10`}
       >
         <ThemeProvider
           attribute="class"
