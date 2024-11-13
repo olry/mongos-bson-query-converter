@@ -1,8 +1,8 @@
+import { TITLE } from '@/constants';
 import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
 import localFont from 'next/font/local';
 import './globals.css';
-import { ThemeProvider } from 'next-themes';
-import { TITLE } from '@/constants';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -33,8 +33,8 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          // enableSystem
           disableTransitionOnChange
         >
           {children}

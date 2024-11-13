@@ -10,7 +10,6 @@ export async function highlight(code: string, theme?: string) {
     transformers: [
       {
         pre(hast) {
-          console.log('whut', hast);
           hast.properties.style = '';
         },
       },

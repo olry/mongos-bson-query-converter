@@ -60,6 +60,7 @@ export default function Home() {
                     transformerKeys.find((k) => k !== val) as any
                   );
                 }
+                setValue(transformedValue);
                 return setSrcTransformType(val);
               }}
             />
@@ -85,6 +86,7 @@ export default function Home() {
                       transformerKeys.find((k) => k !== val) as any
                     );
                   }
+                  setValue(transformedValue);
                   return setDstTransformType(val);
                 }}
               />
