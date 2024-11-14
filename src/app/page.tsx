@@ -54,8 +54,8 @@ export default function Home() {
     }
   }, [transformer, value]);
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-16 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col w-2/4 min-w-[400px] lg:min-w-[900px] gap-8 items-center sm:items-start mt-[16vh] relative">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-16 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col w-2/4 min-w-[400px] lg:min-w-[900px] gap-8 items-center sm:items-start mt-[17vh] relative pt-8">
         <div
           className={clsx(
             'flex flex-col w-full transition-all',
@@ -154,6 +154,8 @@ Because writing BSON queries in Go is metal.
 
 This tool serves as a convenience in constructing your mongoDB queries in Go code.
 
+- Supports arbitrary variable identifiers
+- Maps built-in functions appropriately (ObjectId, new Date())
             `}</Markdown>
           </div>
         </div>
