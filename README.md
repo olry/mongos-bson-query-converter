@@ -1,3 +1,6 @@
 # mongos-bson-query-converter
 
-https://olry.github.io/
+BSON / mongo shell online query converter tool for Golang.
+
+
+Visit: https://olry.github.io/mongos-bson-query-converter/
