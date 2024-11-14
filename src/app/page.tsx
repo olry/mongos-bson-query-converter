@@ -11,7 +11,6 @@ import {
 import Image from 'next/image';
 import { useMemo, useRef, useState } from 'react';
 import MongoSvg from '@/assets/mongo-bw.svg';
-import BsonSvg from '@/assets/bson.svg';
 import ThemeSwitchButton from '@/components/ThemeSwitchButton';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { Bug } from 'lucide-react';
 import Markdown from 'react-markdown';
+import LogoImage from '@/assets/logo.png';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -54,12 +54,14 @@ export default function Home() {
     }
   }, [transformer, value]);
   return (
-    <div className="flex flex-col items-center justify-items-center min-h-screen gap-16 py-8 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col items-center justify-center h-screen gap-16 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col w-2/4 min-w-[400px] lg:min-w-[900px] gap-8 items-center sm:items-start mt-[16vh] relative">
         <div
           className={clsx(
-            'flex flex-col w-full transition-opacity',
-            whyState.isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            'flex flex-col w-full transition-all',
+            whyState.isActive
+              ? 'opacity-0 pointer-events-none scale-95'
+              : 'opacity-100 scale-100'
           )}
         >
           <div className="flex w-full min-h-[360px] h-[42vh] gap-4">
@@ -124,20 +126,39 @@ export default function Home() {
             'w-full flex justify-center absolute transition-all font-[family-name:var(--font-geist-mono)]',
             whyState.isActive
               ? 'opacity-100 -translate-y-0'
-              : 'opacity-0 pointer-events-none translate-y-6 text-neutral-300'
+              : 'opacity-0 pointer-events-none translate-y-6 text-neutral-200'
           )}
         >
           <div className="max-w-[720px] w-full">
-            <Markdown>{`
-Because.
-we also
+            <Markdown
+              components={{
+                a({ className, ...props }) {
+                  return (
+                    <a
+                      {...props}
+                      className={clsx(className, 'text-cyan-500 underline')}
+                    />
+                  );
+                },
+                p({ className, ...props }) {
+                  return (
+                    <p
+                      {...props}
+                      className={clsx(className, 'mb-6 text-sm')}
+                    ></p>
+                  );
+                },
+              }}
+            >{`
+Because writing BSON queries in Go is metal.
 
+This tool serves as a convenience in constructing your mongoDB queries in Go code.
 
-[asd](https://www.reddit.com/r/golang/comments/1bfe8vc/what_are_your_honest_thoughts_on_libraries_like/)
             `}</Markdown>
           </div>
         </div>
-        <div className="text-center w-full mt-6 md:text-3xl text-2xl">
+        <div className="flex items-center justify-center w-full mt-6 md:text-3xl text-2xl gap-2">
+          {/* <Image {...LogoImage} width={60} height={60} alt="logo" priority /> */}
           {TITLE}
         </div>
         {/* <Image
@@ -254,9 +275,9 @@ function TransformTypeSelection<T extends string = keyof typeof transformers>({
           <Image src={MongoSvg} width={18} height={18} alt="mongo icon" />
           mongosh
         </Tabs.Trigger>
-        <Tabs.Trigger value="bson">
+        <Tabs.Trigger value="bson" className="flex gap-1">
           <span className="text-white">
-            <Image src={BsonSvg} width={18} height={18} alt="BSON icon" />
+            <Image {...LogoImage} width={18} height={18} alt="BSON icon" />
           </span>
           BSON
         </Tabs.Trigger>

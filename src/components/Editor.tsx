@@ -1,6 +1,6 @@
 'use client';
-import MonacoEditor, { useMonaco } from '@monaco-editor/react';
-import { useEffect } from 'react';
+import MonacoEditor, { useMonaco, Monaco } from '@monaco-editor/react';
+import { useEffect, useRef } from 'react';
 import { createHighlighter } from 'shiki';
 import { shikiToMonaco } from '@shikijs/monaco';
 import { Card } from './ui/card';
@@ -26,10 +26,14 @@ export default function Editor({
     );
   }, [monaco, theme]);
 
+  const editorRef =
+    useRef<ReturnType<Monaco['editor']['getEditors']>[number]>();
+
   return (
     <Card className="flex-1 overflow-hidden">
       <MonacoEditor
         onMount={(editor, monaco) => {
+          editorRef.current = editor;
           shikiToMonaco(highlighter, monaco);
           monaco.editor.setTheme(
             theme === 'light' ? 'vitesse-light' : 'vitesse-dark'

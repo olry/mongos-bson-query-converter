@@ -22,7 +22,7 @@ export function transformToBsonGo(input: string): string {
       case 'ArrayExpression':
         // Convert to bson.A
         const elements = node.elements.map(evaluateNode);
-        return `bson.A{${elements.join(', ')}}`;
+        return `[]bson.D{${elements.join(', ')}}`;
 
       case 'Literal':
         if (typeof node.value === 'string') return `"${node.value}"`;
