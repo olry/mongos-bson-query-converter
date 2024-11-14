@@ -43,9 +43,7 @@ export function transformToBsonGo(input: string): string {
 
       case 'Identifier':
         if (node.name === 'null') return 'nil';
-        if (node.name === 'true') return 'true';
-        if (node.name === 'false') return 'false';
-        throw new Error(`Unknown identifier: ${node.name}`);
+        return node.name;
 
       default:
         throw new Error(`Unsupported AST node type: ${node.type}`);
