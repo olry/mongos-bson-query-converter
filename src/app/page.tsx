@@ -239,7 +239,7 @@ This tool serves as a convenience in constructing your mongoDB queries in Go cod
         </a>
       </div>
       <div className="flex-1"></div>
-      <footer className="flex justify-end w-full md:px-12 px-6 gap-4">
+      <footer className="fixed bottom-0 flex justify-end w-full md:px-12 px-6 gap-4 pb-4">
         <ThemeSwitchButton />
         <Button asChild className="p-3 h-11 w-11" variant="ghost">
           <Link
