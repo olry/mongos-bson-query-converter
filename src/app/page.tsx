@@ -11,6 +11,7 @@ import {
 import Image from 'next/image';
 import { useMemo, useRef, useState } from 'react';
 import MongoSvg from '@/assets/mongo-bw.svg';
+import GoSvg from '@/assets/go.svg';
 import ThemeSwitchButton from '@/components/ThemeSwitchButton';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,6 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { Bug } from 'lucide-react';
 import Markdown from 'react-markdown';
-import LogoImage from '@/assets/logo.png';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -157,7 +157,7 @@ This tool serves as a convenience in constructing your mongoDB queries in Go cod
             `}</Markdown>
           </div>
         </div>
-        <div className="flex items-center justify-center w-full mt-6 md:text-3xl text-2xl gap-2">
+        <div className="flex items-center justify-center w-full mt-6 md:text-2xl text-xl gap-2 text-center">
           {/* <Image {...LogoImage} width={60} height={60} alt="logo" priority /> */}
           {TITLE}
         </div>
@@ -277,7 +277,14 @@ function TransformTypeSelection<T extends string = keyof typeof transformers>({
         </Tabs.Trigger>
         <Tabs.Trigger value="bson" className="flex gap-1">
           <span className="text-white">
-            <Image {...LogoImage} width={18} height={18} alt="BSON icon" />
+            {/* <Image {...LogoImage} width={18} height={18} alt="BSON icon" /> */}
+            <Image
+              src={GoSvg}
+              width={22}
+              height={22}
+              alt="mongo icon"
+              className="grayscale"
+            />
           </span>
           BSON
         </Tabs.Trigger>
