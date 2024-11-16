@@ -15,9 +15,11 @@ export function transformToBsonGo(input: string): string {
         const properties = node.properties.map((prop: any) => {
           const key = prop.key.name || prop.key.value;
           const value = evaluateNode(prop.value);
-          return `bson.E{"${key}", ${value}}`;
+          return `bson.E{"${key}", ${value}},`;
         });
-        return `bson.D{${properties.join(', ')}}`;
+        return `bson.D{
+${properties.join('\n')}
+        }`;
 
       case 'ArrayExpression':
         // Convert to bson.A

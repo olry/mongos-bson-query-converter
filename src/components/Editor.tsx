@@ -7,10 +7,14 @@ import { Card } from './ui/card';
 import { useTheme } from 'next-themes';
 
 // Create the highlighter, it can be reused
-const highlighter = await createHighlighter({
-  themes: ['vitesse-dark', 'vitesse-light'],
-  langs: ['javascript', 'typescript', 'vue'],
-});
+const highlighter = (
+  global.window
+    ? await createHighlighter({
+        themes: ['vitesse-dark', 'vitesse-light'],
+        langs: ['javascript', 'typescript', 'vue'],
+      })
+    : undefined
+) as Awaited<ReturnType<typeof createHighlighter>>;
 
 export default function Editor({
   focusOnLoad,

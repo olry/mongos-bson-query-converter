@@ -9,7 +9,7 @@ import {
   transformToBsonGo,
 } from '@/package/bson-mongos-converter';
 import Image from 'next/image';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import MongoSvg from '@/assets/mongo-bw.svg';
 import GoSvg from '@/assets/go.svg';
 import ThemeSwitchButton from '@/components/ThemeSwitchButton';
@@ -19,6 +19,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { Bug } from 'lucide-react';
 import Markdown from 'react-markdown';
+import init, { format } from '@wasm-fmt/gofmt';
 
 const transformers = {
   bson: transformToBsonGo,
@@ -39,17 +40,27 @@ export default function Home() {
     () => transformers[dstTransformType],
     [dstTransformType]
   );
+  useEffect(() => {
+    init('/gofmt.wasm');
+  }, []);
 
   const whyState = useToggle();
 
   const transformedValue = useMemo(() => {
     try {
-      const transformed = transformer(value ?? '{}');
+      let transformed = transformer(value ?? '{}');
+      transformed = format?.(transformed) ?? transformed;
       setError('');
       lastValidValueRef.current = transformed;
+
       return transformed;
     } catch (err: any) {
-      setError(err?.message);
+      if (
+        err?.message !==
+        `Cannot read properties of undefined (reading 'format')`
+      ) {
+        setError(err?.message);
+      }
       return value;
     }
   }, [transformer, value]);

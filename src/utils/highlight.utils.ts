@@ -7,6 +7,7 @@ export async function highlight(code: string, theme?: string) {
   const outRaw = await codeToHast(code, {
     lang: 'go',
     theme: theme === 'dark' ? 'github-dark' : 'github-light',
+
     transformers: [
       {
         pre(hast) {
